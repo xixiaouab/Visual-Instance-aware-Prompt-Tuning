@@ -1,8 +1,24 @@
 # Visual Instance-aware Prompt Tuning
 
-Official PyTorch implementation scaffold for **Visual Instance-aware Prompt Tuning** (ACM MM 2025).
+**Visual Instance-aware Prompt Tuning** · ACM Multimedia 2025
 
-This repository now exposes the core architecture used by the project: probabilistic instance-aware prompt generation, dataset-level prompts, PCA-balanced prompt propagation, a prompt-injected ViT wrapper, and lightweight training/evaluation entrypoints. Full datasets, pretrained checkpoints, and exact experiment scripts will be released separately.
+[Paper](https://doi.org/10.1145/3746027.3754858) · [Implementation status](#implementation-status)
+
+Official PyTorch architecture scaffold for Visual Instance-aware Prompt Tuning (ViaPT). The repository includes probabilistic instance-aware prompt generation, dataset-level prompts, PCA-balanced prompt propagation, a prompt-injected ViT wrapper, and reusable training/validation helpers.
+
+## Implementation Status
+
+| Component | Current status |
+| --- | --- |
+| Prompt generation and propagation | Core architecture modules available |
+| Prompt-injected ViT wrapper | Available |
+| Dataset interface | Generic JSONL image dataset available |
+| Training and validation loops | Reusable helper functions available |
+| Training entrypoint | Initializes the model; dataset and training-loop integration required |
+| Evaluation entrypoint | Argument-parsing scaffold; evaluation integration required |
+| Benchmark recipes and pretrained checkpoints | Not yet released |
+
+The full datasets, pretrained checkpoints, and exact experiment scripts will be released separately.
 
 ## Core Idea
 
@@ -22,23 +38,34 @@ dataset-level prompts ----------------+                              v
 
 ```text
 configs/vipt_base.yaml        Minimal experiment configuration
-scripts/train.py              Training entrypoint
-scripts/evaluate.py           Evaluation entrypoint
+scripts/train.py              Model-initialization scaffold
+scripts/evaluate.py           Evaluation argument-parsing scaffold
 src/vipt/models/prompts.py    ViaPT prompt generation and PCA propagation
 src/vipt/models/vit_vipt.py   Prompt-injected ViT wrapper
-src/vipt/engine/trainer.py    Training and validation loop skeleton
-src/vipt/data/datasets.py     Dataset placeholders and sample schema
+src/vipt/engine/trainer.py    Training and validation loop helpers
+src/vipt/data/datasets.py     JSONL image dataset and sample schema
 ```
 
-## Quick Start
+The paper and method use the name ViaPT; the Python package is named `vipt`.
+
+## Inspect the Architecture Scaffold
+
+Install the dependencies and initialize the model:
 
 ```bash
 pip install -r requirements.txt
 python scripts/train.py --config configs/vipt_base.yaml
+```
+
+The training entrypoint loads the configuration, creates the model, and reports its parameter count. Connect a DataLoader and the training helpers to run an experiment.
+
+The evaluation entrypoint currently accepts the intended configuration and checkpoint arguments:
+
+```bash
 python scripts/evaluate.py --config configs/vipt_base.yaml --checkpoint path/to/checkpoint.pt
 ```
 
-The current code is intentionally a research scaffold: it documents the method interfaces and critical control flow without bundling private datasets or final training recipes.
+This command prints the supplied arguments; loading a checkpoint and running evaluation still require integration.
 
 ## Citation
 
@@ -50,3 +77,4 @@ The current code is intentionally a research scaffold: it documents the method i
   year={2025}
 }
 ```
+
